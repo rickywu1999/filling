@@ -35,7 +35,24 @@ def draw_polygons( matrix, screen, color ):
                        int(matrix[point+2][1]),
                        screen, color)    
         point+= 3
+        fill(matrix,screen,color,point)
 
+def fill(matrix,screen,color,point)
+    lx = [matrix[point][0],matrix[point+1][0],matrix[point+2][0]]
+    ly = [matrix[point][1],matrix[point+1][1],matrix[point+2][1]]
+    bot = ly.index(min(ly))
+    top = ly.index(max(ly))
+    mid = ly.index([0,1,2].remove(bot).remove(top)[0])
+    
+    bot-top = 1.0 * (lx[top]-lx[bot])/(ly[top]-ly[bot])
+    bot-mid = 1.0 * (lx[mid]-lx[bot])/(ly[mid]-ly[bot])
+    mid-top = 1.0 * (lx[top]-lx[mid])/(ly[top]-ly[mid])
+
+    x1 = lx[bot]
+    x2 = lx[bot]
+    
+    for i in range(ly[bot]-ly[top]):
+        
 
 def add_box( polygons, x, y, z, width, height, depth ):
     x1 = x + width
