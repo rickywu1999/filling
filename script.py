@@ -1,43 +1,32 @@
 import mdl
 import os
+import sys
 from display import *
 from matrix import *
 from draw import *
 
 """======== first_pass( commands, symbols ) ==========
-
   Checks the commands array for any animation commands
   (frames, basename, vary)
   
   Should set num_frames and basename if the frames 
   or basename commands are present
-
   If vary is found, but frames is not, the entire
   program should exit.
-
   If frames is found, but basename is not, set name
   to some default value, and print out a message
   with the name being used.
-
   jdyrlandweaver
   ==================== """
-global c_frame 
 
 def first_pass( commands ):
     basename = ""
     frames = -1
     for command in commands:
         if command[0] == 'frames':
-            try:
-                frames = command[1]
-            except:
-                print("frames parameter is incorrect")
-                sys.exit(1)
+            frames = command[1]
         if command[0] == 'basename':
-            try:
-                basename = command[1]
-            except:
-                print("basename parameter is incorrect")
+            basename = command[1]
         if command[0] == 'vary':
             if frames == -1:
                 print("vary used without setting frames")
@@ -53,17 +42,14 @@ def first_pass( commands ):
 
 
 """======== second_pass( commands ) ==========
-
   In order to set the knobs for animation, we need to keep
   a seaprate value for each knob for each frame. We can do
   this by using an array of dictionaries. Each array index
   will correspond to a frame (eg. knobs[0] would be the first
   frame, knobs[2] would be the 3rd frame and so on).
-
   Each index should contain a dictionary of knob values, each
   key will be a knob name, and each value will be the knob's
   value for that frame.
-
   Go through the command array, and when you find vary, go 
   from knobs[0] to knobs[frames-1] and add (or modify) the
   dictionary corresponding to the given knob with the
@@ -82,7 +68,7 @@ def second_pass( commands, num_frames ):
             value = command[5] - command[4]
             f_range = command[3] - command[2]
             c = 0.0
-            for i in range(command[2],command[3]):
+            for i in range(command[2],command[3] + 1):
                 if name in a[i]:
                     print("Overlapping and conflicting frames for vary variable " + name)
                     sys.exit(1)
@@ -143,7 +129,7 @@ def run(filename):
                 y = args[1]
                 z = args[2]
                 try:
-                    i = knobs[c_frame][args[3]]
+                    i = knobs[c_frame-1][args[3]]
                     tmp = make_translate(x*i,y*i,z*i)
                 except:
                     tmp = make_translate(x, y, z)
@@ -155,7 +141,7 @@ def run(filename):
                 y = args[1]
                 z = args[2]
                 try:
-                    i = knobs[c_frame][args[3]]
+                    i = knobs[c_frame-1][args[3]]
                     tmp = make_scale(x*i,y*i,z*i)
                     print(str(i))
                 except:
@@ -166,7 +152,7 @@ def run(filename):
             elif c == 'rotate':
                 theta = args[1] * (math.pi/180)
                 try:
-                    theta *= knobs[c_frame][args[2]]
+                    theta *= knobs[c_frame-1][args[2]]
                 except:
                     "lol"
                 if args[0] == 'x':

@@ -34,25 +34,52 @@ def draw_polygons( matrix, screen, color ):
                        int(matrix[point+2][0]),
                        int(matrix[point+2][1]),
                        screen, color)    
-        point+= 3
         fill(matrix,screen,color,point)
+        point+=3
 
-def fill(matrix,screen,color,point)
+def fill(matrix,screen,color,point):
     lx = [matrix[point][0],matrix[point+1][0],matrix[point+2][0]]
     ly = [matrix[point][1],matrix[point+1][1],matrix[point+2][1]]
-    bot = ly.index(min(ly))
-    top = ly.index(max(ly))
-    mid = ly.index([0,1,2].remove(bot).remove(top)[0])
-    
-    bot-top = 1.0 * (lx[top]-lx[bot])/(ly[top]-ly[bot])
-    bot-mid = 1.0 * (lx[mid]-lx[bot])/(ly[mid]-ly[bot])
-    mid-top = 1.0 * (lx[top]-lx[mid])/(ly[top]-ly[mid])
+    x_bot = min(lx)
+    y_bot = min(ly)
 
-    x1 = lx[bot]
-    x2 = lx[bot]
+    lx.remove(x_bot)
+    ly.remove(y_bot)
+    x_mid = min(lx)
+    y_mid = min(ly)
+
+    lx.remove(x_mid)
+    ly.remove(y_mid)
+    x_top = lx[0]
+    y_top = ly[0]
+
+    try:
+        bot_top = 1.0 * (x_top-x_bot)/(y_top-y_bot)
+    except:
+        bot_top = 0.0
+    try:
+        bot_mid = 1.0 * (x_mid-x_bot)/(y_mid-y_bot)
+    except:
+        bot_mid = 0
+    try:
+        mid_top = 1.0 * (x_top-x_mid)/(y_top-y_mid)
+    except:
+        mid_top = 0
+
+    x1 = x_bot
+    x2 = x_bot
+    y = y_bot
     
-    for i in range(ly[bot]-ly[top]):
-        
+    for i in range(int(y_top-y_bot+1)):
+        draw_line(int(x1), int(y), int(x2), int(y), screen, color)
+        y += 1
+        x1 += bot_top
+        if y >= y_mid:
+            color = [0,255,0]
+            x2 += mid_top
+        else:
+            color = [255,0,0]
+            x2 += bot_mid
 
 def add_box( polygons, x, y, z, width, height, depth ):
     x1 = x + width
