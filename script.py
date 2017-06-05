@@ -97,6 +97,7 @@ def run(filename):
     (basename,frames) = first_pass(commands)
     knobs = second_pass(commands,frames)
     for c_frame in range(frames):
+        print("Frame " + str(c_frame))
         tmp = new_matrix()
         ident(tmp)
         stack = [ [x[:] for x in tmp] ]
@@ -143,7 +144,6 @@ def run(filename):
                 try:
                     i = knobs[c_frame-1][args[3]]
                     tmp = make_scale(x*i,y*i,z*i)
-                    print(str(i))
                 except:
                     tmp = make_scale(x, y, z)
                 matrix_mult(stack[-1], tmp)

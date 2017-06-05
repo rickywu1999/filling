@@ -17,8 +17,8 @@ def draw_polygons( matrix, screen, color ):
     while point < len(matrix) - 2:
 
         normal = calculate_normal(matrix, point)[:]
-        print normal
         if normal[2] > 0:
+            fill(matrix,screen,color,point)
             draw_line( int(matrix[point][0]),
                        int(matrix[point][1]),
                        int(matrix[point+1][0]),
@@ -34,26 +34,46 @@ def draw_polygons( matrix, screen, color ):
                        int(matrix[point+2][0]),
                        int(matrix[point+2][1]),
                        screen, color)    
-        fill(matrix,screen,color,point)
         point+=3
 
 def fill(matrix,screen,color,point):
-    lx = [matrix[point][0],matrix[point+1][0],matrix[point+2][0]]
-    ly = [matrix[point][1],matrix[point+1][1],matrix[point+2][1]]
+    x1 = matrix[point][0]
+    x2 = matrix[point+1][0]
+    x3 = matrix[point+2][0]
+    y1 = matrix[point][1]
+    y2 = matrix[point+1][1]
+    y3 = matrix[point+2][1]
+
+    lx = [x1,x2,x3]
+    ly = [y1,y2,y3]
+    
+    y_top = max(ly)
+    if y_top == y1:
+        x_top = x1
+    if y_top == y2:
+        x_top = x2
+    if y_top == y3:
+        x_top = x3
+    
+    ly.remove(y_top)
+    lx.remove(x_top)
+    
+    y_mid = max(ly)
+    if y_mid == y1:
+        x_mid = x1
+    if y_mid == y2:
+        x_mid = x2
+    if y_mid == y3:
+        x_mid = x3
+
     y_bot = min(ly)
-    x_bot = lx[ly.index(y_bot)]
-
-    lx.remove(x_bot)
-    ly.remove(y_bot)
+    if y_bot == y1:
+        x_bot = x1
+    if y_bot == y2:
+        x_bot = x2
+    if y_bot == y3:
+        x_bot = x3
     
-    y_mid = min(ly)
-    x_mid = lx[ly.index(y_mid)]
-
-    lx.remove(x_mid)
-    ly.remove(y_mid)
-    
-    x_top = lx[0]
-    y_top = ly[0]
 
     #print("(" + str(x_bot) +"," + str(y_bot) + ")(" + str(x_mid) + "," + str(y_mid) + ")(" + str(x_top) + "," + str(y_top) + ")")
 
@@ -70,22 +90,23 @@ def fill(matrix,screen,color,point):
     except:
         mid_top = 0.0
         
-    print(str(bot_top) + " " + str(bot_mid) + " " + str(mid_top))
+    #print(str(bot_top) + " " + str(bot_mid) + " " + str(mid_top))
         
-    x1 = x_bot
-    x2 = x_bot
+    x1 = x_bot * 1.0
+    x2 = x_bot * 1.0
     if y_bot == y_mid:
-        x2 = x_mid
-    y = y_bot
+        x2 = x_mid * 1.0
+    y = int(y_bot)
     
     while y < y_top:
-        color = [0,0,255]
         draw_line(int(x1), int(y), int(x2), int(y), screen, color)
-        y += 1
+        y += 1.0
         x1 += bot_top
         if y >= y_mid:
+            color = [255,0,0]
             x2 += mid_top
         else:
+            color = [0,0,255]
             x2 += bot_mid
 
 def add_box( polygons, x, y, z, width, height, depth ):
