@@ -96,16 +96,19 @@ def fill(matrix,screen,color,point):
     x2 = x_bot * 1.0
     if y_bot == y_mid:
         x2 = x_mid * 1.0
-    y = int(y_bot)
+    y = y_bot
     
     while y < y_top:
         draw_line(int(x1), int(y), int(x2), int(y), screen, color)
-        y += 1.0
         x1 += bot_top
         if y >= y_mid:
+            if y_top - y_mid >= 1:
+                y += 1
             color = [255,0,0]
             x2 += mid_top
         else:
+            if y_mid - y_bot >= 1:
+                y += 1
             color = [0,0,255]
             x2 += bot_mid
 
