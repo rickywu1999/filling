@@ -78,18 +78,18 @@ def fill(matrix,screen,color,point):
     #print("(" + str(x_bot) +"," + str(y_bot) + ")(" + str(x_mid) + "," + str(y_mid) + ")(" + str(x_top) + "," + str(y_top) + ")")
 
     try:
-        bot_top = (1.0 * (x_top-x_bot))/(1.0 * (y_top-y_bot))
+        bot_top = (1.0 * (x_top-x_bot))/(1.0 * (int(y_top)-int(y_bot)))
     except:
         bot_top = 0.0
     try:
-        bot_mid = (1.0 * (x_mid-x_bot))/(1.0 * (y_mid-y_bot))
+        bot_mid = (1.0 * (x_mid-x_bot))/(1.0 * (int(y_mid)-int(y_bot)))
     except:
         bot_mid = 0.0
     try:
-        mid_top = (1.0 * (x_top-x_mid))/(1.0 * (y_top-y_mid))
+        mid_top = (1.0 * (x_top-x_mid))/(1.0 * (int(y_top)-int(y_mid)))
     except:
         mid_top = 0.0
-        
+
     #print(str(bot_top) + " " + str(bot_mid) + " " + str(mid_top))
         
     x1 = x_bot * 1.0
@@ -100,17 +100,19 @@ def fill(matrix,screen,color,point):
     
     while y < y_top:
         draw_line(int(x1), int(y), int(x2), int(y), screen, color)
+        if abs(y - y_mid) < 1:
+            x2 = x_mid
         x1 += bot_top
-        if y >= y_mid:
-            if y_top - y_mid >= 1:
-                y += 1
+        if y > y_mid:
             color = [255,0,0]
             x2 += mid_top
         else:
-            if y_mid - y_bot >= 1:
-                y += 1
             color = [0,0,255]
             x2 += bot_mid
+            if (int(y) == int(y_mid)):
+                if (x2 > x1 and x2 > x_mid) or (x2 < x1 and x2  < x_mid):
+                    x2 = x_mid * 1.0
+        y+=1
 
 def add_box( polygons, x, y, z, width, height, depth ):
     x1 = x + width
